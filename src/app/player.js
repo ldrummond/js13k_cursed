@@ -82,13 +82,10 @@ export default class extends Entity {
     // ctx.closePath();
     ctx.strokeRect(-this._hitrad / 2, -this._hitrad / 2, this._hitrad, this._hitrad);
     ctx.stroke(); 
-    // 
-    if(w.DEBUG){
-      ctx.beginPath();
-      ctx.arc(0, 0, this._hitrad, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.closePath();
-    } 
+
+    // DEBUG
+    if(w.DEBUG){this._drawHitbox(ctx)} 
+    
     ctx.restore(); 
   }
 }

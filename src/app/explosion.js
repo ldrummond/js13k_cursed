@@ -22,15 +22,9 @@ export default class extends Entity {
     ctx.save();
     ctx.translate(this._pos.x, this._pos.y); 
     ctx.beginPath();
+    ctx.strokeStyle = `rgba(0, 100, 0, ${0.6 - this._size/ this._maxsize})`
     ctx.arc(0, 0, this._size, 0, 2 * Math.PI);    
     ctx.stroke(); 
-    // // 
-    // if(w.DEBUG){
-    //   ctx.beginPath();
-    //   ctx.arc(0, 0, this._hitrad, 0, 2 * Math.PI);
-    //   ctx.stroke();
-    //   ctx.closePath();
-    // } 
     ctx.restore(); 
   }
 }

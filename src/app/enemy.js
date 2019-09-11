@@ -10,7 +10,7 @@ export default class extends Entity {
     this._speed       = 0.5;
     this._eType       = opts._eType || 'floater';
     this._type        = 'enemy';
-    this._hitrad = 40; 
+    this._hitrad = 30; 
   }
 
     // _capVel() {
@@ -64,18 +64,22 @@ export default class extends Entity {
     ctx.save();
     ctx.translate(this._pos.x, this._pos.y); 
     ctx.strokeWidth = 2; 
+    let r = this._hitrad
     
     switch(this._eType) {
       case 'floater':
         ctx.rotate(Math.PI / 4);
         ctx.fillStyle = 'white';
-        ctx.fillRect(-this._hitrad/2, -this._hitrad/2, this._hitrad/2, this._hitrad/2);
-        ctx.strokeRect(-this._hitrad/2, -this._hitrad/2, this._hitrad/2, this._hitrad/2);
+        ctx.fillRect(-r/ 2, -r/ 2, r, r);
+        ctx.strokeRect(-r/ 2, -r/ 2, r, r);
         break;
 
       case 'sniper':
         break; 
     }
+
+    // DEBUG
+    if(w.DEBUG){this._drawHitbox(ctx)} 
     
     ctx.restore(); 
   }

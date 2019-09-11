@@ -26,7 +26,7 @@ export default class {
   }
 
   _checkCollisions() {
-    let cols = w.entities.filter(e => w.sqDist(this._pos, e._pos) < w.sq(this._hitrad) + w.sq(e._hitrad) && e._collides)
+    let cols = w.entities.filter(e => w.sqDist(this._pos, e._pos) < w.sq(this._hitrad * 0.6) + w.sq(e._hitrad * 0.6) && e._collides)
     this._handleCollisions(cols);
   }
 
@@ -36,9 +36,16 @@ export default class {
 
   _outOfBounds() {
     if(this._pos.x - this._hitrad < 2){return 1}           
-    if(this._pos.x + this._hitrad > w.bounds.width - 2){return 1} 
+    if(this._pos.x + this._hitrad > w.bounds.width){return 1} 
     if(this._pos.y - this._hitrad < 2){return 2}             
-    if(this._pos.y + this._hitrad > w.bounds.height - 2){return 2}
+    if(this._pos.y + this._hitrad > w.bounds.height){return 2}
+  }
+
+  _drawHitbox(ctx) {
+    ctx.beginPath();
+    ctx.arc(0, 0, this._hitrad * 0.6, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.closePath();
   }
  
   update(ctx) {

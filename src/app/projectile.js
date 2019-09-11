@@ -50,13 +50,10 @@ export default class extends Entity {
     ctx.fillRect(-this._hitrad / 2, -this._hitrad/2, -this._hitrad / 2, this._hitrad / 2);
     ctx.fillStyle = 'rgba(0, 20, 100, 0.8)';
     ctx.fillRect(0, -this._hitrad/2, -this._hitrad / 2, this._hitrad / 2);
-    // 
-    if(w.DEBUG){
-      ctx.beginPath();
-      ctx.arc(0, 0, this._hitrad, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.closePath();
-    }  
+
+    // DEBUG
+    // if(w.DEBUG){this._drawHitbox(ctx)}  
+
     ctx.restore(); 
   }
 }
