@@ -13,7 +13,7 @@ import SequenceController from "./sequence";
 export default class {
   constructor() {
     // Canvas
-    this._cc        = new CanvasController(); 
+    this._cc        = CanvasController; 
     this._canvas    = this._cc.canvas; 
     this._ctx       = this._cc.ctx;
 

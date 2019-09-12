@@ -3,7 +3,7 @@
   padding: 0;
   margin: 0;
   box-sizing: content-box; 
-  font-family: monospace, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-weight: 200;
   letter-spacing: -0.01em;
   word-spacing: -0.2em;
@@ -39,6 +39,7 @@ label img {
 .dialog {
   opacity: 0;
   pointer-events: none;
+  position: absolute;
   transition: opacity 333ms ease-in;
   background: rgb(255, 253, 253);
   border-radius: 2px;
@@ -48,6 +49,13 @@ label img {
   border: 1px solid rgba(0, 0, 0, 0.3);
   box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
   overflow: hidden
+}
+
+.dialog .active {
+  position: absolute;
+}
+.dialog .visible {
+  opacity: 1;
 }
 
 .d-head {
@@ -93,6 +101,10 @@ label img {
   min-height: 100px;
 }
 
+.wide {
+  width: 400px;
+}
+
 .tiny {
   width: 100px;
   height: 50px;
@@ -118,6 +130,10 @@ label img {
   position: absolute;
 }
 
+.t-left {
+  text-align: left;
+}
+
 .rel {
   position: relative;
 }
@@ -131,7 +147,6 @@ label img {
 
 /* visibility */
 .visible {
-  display: block;
   opacity: 1;
   pointer-events: all;
 }
@@ -166,7 +181,6 @@ label img {
 
 /* Id Scoped */
 #main-block {
-  overflow: hidden;
   background: #FBFFF1;
   border-radius: 10px;
   box-shadow: 8px 10px 0px 0px rgba(0, 0, 0, 0.2);
@@ -205,7 +219,6 @@ h1,h2,h3,h4,h5 {
   left: 20px;
   color: rgb(90, 90, 90);
   font-weight: 100;
-  font-family: 'Courier New', Courier, monospace,
 }
 
 #score {

@@ -1,6 +1,6 @@
 import w from "./w";
 
-export default class {
+class Canvas {
   constructor() {
     this.canvas     = document.getElementById('_canvas'); 
     this.cursor     = {x: 0, y: 0}
@@ -58,7 +58,7 @@ export default class {
   }
 
   drawBackground() {
-    this.ctx.fillStyle = '#DEE1E6';
+    this.ctx.fillStyle = '#DDD';
     this.ctx.fillRect(0, 0, 100, 50);
     this.ctx.fillRect(this._bounds.width - 50, 0, this._bounds.width, 50);
     this.ctx.fillRect(100, 0, this._bounds.width - 150, 15);
@@ -96,6 +96,11 @@ export default class {
     // this.ctx.strokeRect(w.bounds.left, w.bounds.top, w.bounds.width, w.bounds.height);
   }
 
+  drawFlash() {
+    // this.ctx.fillStyle = '#000';
+    // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   drawLoader() {
     this.ctx.fillStyle = '#222';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -105,3 +110,5 @@ export default class {
     this._bounds  = this.canvas.getBoundingClientRect();
   }
 }
+
+export default new Canvas();

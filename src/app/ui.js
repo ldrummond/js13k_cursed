@@ -6,8 +6,11 @@ class UI {
     this._texts         = [];
     this._numTexts      = 100;
 
+    this._backrgb       = {r: 251, g: 255, b: 241}
+    this._finalrgb      = {r: 251, g: 255, b: 241}
+
     this._main          = document.getElementById('main-block');
-    this._dialog        = document.getElementById('dialog');
+    this._dialog        = document.getElementById('base-dialog');
     
     this._url           = document.getElementById('url');
     this._mainText      = document.getElementById('main-text');
@@ -35,7 +38,8 @@ class UI {
     };
 
     setInterval(_ => {
-      this._texts[w.ranInt(this._numTexts)- 1].textContent = String.fromCharCode(w.ranInt(42) + 48).toLowerCase()
+      let text = this._texts[w.ranInt(this._numTexts)- 1];
+      if(text) {text.textContent = String.fromCharCode(w.ranInt(42) + 48).toLowerCase()};
     }, 10);
   }
 
@@ -45,19 +49,27 @@ class UI {
     this._stateLoop();
   } 
 
+  darken() {
+    this._backrgb = {r: this._backrgb.r - 1, g: this._backrgb.g - 1, b: this._backrgb.b - 1};
+    this._main.style.backgroundColor = `rgb(${this._backrgb.r} ${this._backrgb.g} ${this._backrgb.b})`;
+  }
+
   typeOut(target, string) {
     if(!this._typeOuts[target.id]) {this._typeOuts[target.id] = []}
     else {
       this._typeOuts[target.id].map(t => clearTimeout(t));
     }
-    target.textContent = ''; 
+    target.textContent = '';
     for(let i = 0; i < string.length; i++) {
-      this._typeOuts[target.id].push(setTimeout(_ => target.textContent += string[i], 100 * i));
+      this._typeOuts[target.id].push(setTimeout(_ => target.textContent += string[i], 65 * i));
     }
   }
 
   _stateLoop() {
     switch(this._state) {
+
+      case 'INTRODUCTION':
+        break;
       
       case 'WAIT_CHOOSE_BACK':
         if(this._prevState !== this._state) {
@@ -71,8 +83,9 @@ class UI {
         
       case 'START_LEVEL':
         this.clearDialogs(); 
-        console.log(w._levels.length, w._level);
-        this.typeOut(this._url, '____cursed____/?level=' + (w._levels.length - w._level));
+        setTimeout(_ => {
+          this.typeOut(this._url, '____cursed____/?level=' + (w._levels.length - w._level));
+        }, 333);
         break;
 
       case 'START_WIN':
@@ -128,19 +141,39 @@ class UI {
   }
 
   createDialog(opts = {}) {
-    let {main = 'Contratulations!', sub = 'You have died', button = false, classes = [], ran = false} = opts; 
+    let {
+      main = 'Contratulations!', 
+      sub = 'You have died', 
+      button = false, 
+      classes = [], 
+      ran = false, 
+      typeout = false,
+      pos = [], 
+    } = opts; 
 
-    let d = this._dialog.cloneNode(true);
+    let d     = this._dialog.cloneNode(true);
+    let num   = w.ranInt(100);
+
+    d.id                        = d.id + '-' + num;
+    d.childNodes[5].id          = 'main-' + num;
     d.childNodes[5].textContent = main; 
     d.childNodes[7].textContent = sub; 
-    d.classList.add(...classes, 'visible')
+    d.classList.add(...classes, 'active')
+    setTimeout(_ => {
+      d.classList.add('visible')
+    },1)
     if(ran) {
       d.style = `top: ${20 + w.ranInt(60)}vh; left:${20 + w.ranInt(60)}vw; `;
+    }
+    if(pos) {
+      d.style = `top: ${pos[1]}px; left:${pos[0]}px; `;
     }
     if(button) {
       // d.childNodes[9].textContent = 'button'; 
     }
     this._main.append(d);
+
+    return num; 
   }
 
   setUrl(text) {
