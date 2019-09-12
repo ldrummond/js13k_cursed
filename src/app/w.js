@@ -4,6 +4,9 @@ w.DEBUG = true;
 w.entities = [];
 w.tick = 0; 
 
+// set in canvas
+w.getCenter = _ => {};
+
 // 
 w.sq = i => Math.pow(i,2)
 
@@ -18,7 +21,10 @@ w.hyp = (p1, p2) => {
 }
 
 // 
-w.ran = _ => Math.random(); 
+w.ran = (i = 1) => Math.random() * i; 
+
+// 
+w.ranNorm = (i = 1) => (Math.random() - 0.5) * i;
 
 // 
 w.ranInt = i => Math.round(Math.random() * i);
@@ -26,5 +32,10 @@ w.ranInt = i => Math.round(Math.random() * i);
 // 
 w.oneIn = i => Math.round(Math.random() * i) === i; 
 
+// 
+w.ranSeq = i => {
+  let x = Math.sin(i * 100000);
+  return x - Math.floor(x);
+}
 
 export default w; 

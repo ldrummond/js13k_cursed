@@ -1,8 +1,12 @@
 import { getAngle } from './functions';
 import w from './w'; 
+import types from './types'; 
 
 export default class {
   constructor(opts = {}) {
+    this._parent      = opts.parent || 'game'; 
+    this._type        = opts.type   || 'entity';
+
     this._speed       = opts.speed  || 1; 
     this._health      = opts.health || 1; 
     this._damage      = opts.damage || 1; 
@@ -10,19 +14,13 @@ export default class {
     this._vel         = opts.vel ? {...opts.vel} : {x: 0,  y: 0};
     this._constAngle  = opts.constAngle;
     this._collides    = opts.collides || true; 
-    this._hitrad      = opts.hitrad || 5; 
-    this._type        = opts.type || 'entity';
+    this._hitrad      = opts.hitrad || 5;
 
     this.isDead    = false; 
   }
 
-  _shouldDie() {
-    return false; 
-    return this._health <= 0; 
-  }
-
   _die() {
-    
+    this.isDead = true; 
   }
 
   _checkCollisions() {
@@ -47,8 +45,18 @@ export default class {
     ctx.stroke();
     ctx.closePath();
   }
+
+  takeDamage(d) {
+    this._health -= d; 
+  }
+  
+  moveTo(x, y) {
+    this._pos.x = x;
+    this._pos.y = y;
+  }
  
   update(ctx) {
+    if(this.health <= 0){this._die()}
     if(this.collides){this._checkCollisions()}; 
 
     this._pos.x     += this._vel.x * this._speed;
@@ -61,8 +69,19 @@ export default class {
 
     this._render(ctx); 
   }
+
+  _draw(ctx) {
+    ctx.fillRect(this._pos.x, this._pos.y, 20, 20);
+  }
   
   _render(ctx) {
-    ctx.fillRect(this._pos.x, this._pos.y, 20, 20);
+    ctx.save();
+    ctx.translate(this._pos.x, this._pos.y); 
+    ctx.rotate(this._pos.angle);
+    
+    this._draw(ctx); 
+    // if(w.DEBUG){this._drawHitbox(ctx)}  
+
+    ctx.restore(); 
   }
 }

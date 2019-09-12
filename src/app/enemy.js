@@ -1,7 +1,9 @@
 import w from './w'; 
+import types from './types'; 
 import { getAngle } from './functions';
-import Projectile from './projectile';
 import Entity from "./entity";
+import Projectile from './projectile';
+import Explosion from "./explosion";
 
 export default class extends Entity {
   constructor(opts = {}) {
@@ -9,19 +11,30 @@ export default class extends Entity {
 
     this._speed       = 0.5;
     this._eType       = opts._eType || 'floater';
-    this._type        = 'enemy';
+    this._type        = types['enemy'];
     this._hitrad = 30; 
+
+    switch(this._eType) {
+      case 'floater':
+        this._health = 1;
+        break; 
+
+      case 'sniper':
+        this._health = 2;
+        break;
+    }
   }
 
-    // _capVel() {
-    //   this._vel.x += this._vel.x > 0 ? Math.min(this._vel.x, 1) : Math.max(this._vel.x, -1); 
-    //   this._vel.y += this._vel.y > 0 ? Math.min(this._vel.y, 1) : Math.max(this._vel.y, -1); 
-    // }
+  _die() {
+    w.entities.push(new Explosion({pos: this._pos}))
+    this.isDead = true;
+  }
     
   _shoot() {
     if(w.tick % 10 == 0) {
       let a = this._pos.angle + (w.ran() - 0.5) / 10; 
       this._proj = new Projectile({
+        parent: types['enemy'],
         pos: this._pos, 
         vel: {x: Math.cos(a), y:  -Math.sin(a)}, 
         constAngle: a
@@ -31,13 +44,16 @@ export default class extends Entity {
     }
   }
 
+  _changeTarget() {
+    this._pos.angle = getAngle(this._pos, {x: Math.round(Math.random() * w.bounds.width), y: Math.round(Math.random() * w.bounds.height)});
+  }
+
   update(ctx) {
+    if(this._health === 0) {this._die()}
 
     switch(this._eType) {
       case 'floater':
-        if(w.oneIn(100)) {
-          this._pos.angle = getAngle(this._pos, {x: Math.round(Math.random() * w.bounds.width), y: Math.round(Math.random() * w.bounds.height)});
-        }
+        if(w.oneIn(100)) {this._changeTarget()}
         this._vel.x += Math.cos(this._pos.angle) / 10;
         this._vel.y += -Math.sin(this._pos.angle) / 10;
         this._pos.x += this._vel.x * this._speed;
@@ -80,7 +96,7 @@ export default class extends Entity {
 
     // DEBUG
     if(w.DEBUG){this._drawHitbox(ctx)} 
-    
+
     ctx.restore(); 
   }
 }
