@@ -13,8 +13,21 @@ export default {
       onTick: _ => {
         w.player.nextType(); 
       },
-      tickInterval: 30,
-      endtick: 1000
+      tickInterval: 15,
+      starttick: 0, 
+      endtick: 100,
+    },
+    {
+      // action: _ => {
+      //   ui.createDialog({
+      //     main: 'cursor',
+      //     sub: '',
+      //     button: 'Play Again?',
+      //     classes: ['top-center', 'small', 'visible'],
+      //   });
+      // }, 
+      starttick: 0, 
+      endtick: 100,
     },
     {
       action: _ => {
@@ -22,11 +35,27 @@ export default {
       }, 
       endtick: 10
     },
+  ],
+  dead: [
     {
       action: _ => {
-
-      }, 
-      endtick: 10
-    },
+        // ui.createDialog({
+        //   main: 'Final Score ' + w.tick,
+        //   sub: 'Your deeds will be forever remembered in chrome.storage',
+        //   button: 'Play Again?',
+        //   classes: ['top', 'med', 'abs-center', 'visible', 'simple'],
+        // })
+      },
+      onTick: _ => {
+        // console.log('test');
+        // w.player.nextType(); 
+        ui.createDialog({
+          ran: true,
+        })
+      },
+      tickInterval: 250,
+      starttick: 0, 
+      endtick: 1000,
+    }
   ]
 }

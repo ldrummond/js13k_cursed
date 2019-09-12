@@ -16,15 +16,18 @@ export default class {
       this.isDone = true; return
     }
     
-    let s = this._sequence[0];
-    if(s && s.action && !s.executed) {
-      s.action(); 
-      s.executed = true; 
-    }
-    if(s && s.tickInterval && s.onTick) {
-      if(this._elapsedticks % s.tickInterval == 0) {
-        s.onTick(); 
+    this._sequence.map(s => {
+      if(this._elapsedticks > s.starttick) {
+        if(s && s.action && !s.executed) {
+          s.action(); 
+          s.executed = true; 
+        }
+        if(s && s.tickInterval && s.onTick) {
+          if(this._elapsedticks % s.tickInterval == 0) {
+            s.onTick(); 
+          }
+        }
       }
-    }
+    })
   }
 }

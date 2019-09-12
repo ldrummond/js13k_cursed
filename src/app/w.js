@@ -4,6 +4,10 @@ w.DEBUG = false;
 w.entities = [];
 w.tick = 0; 
 
+w.restart = _ => {
+
+};
+
 // set in canvas
 w.getCenter = _ => {};
 

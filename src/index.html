@@ -2,26 +2,46 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset='utf-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
 </head>
 
 <body class='flex-center full'>
-  <div id='main-block' class="big rel">
-    <div class='flex-center abs-center big'>
-      <label><img src=/><button id='upgrade-1'></button></label>
-      <label><img src='../images/cBomb'/><button id='upgrade-2'></button></label>
-    </div>
-    <div id='dialog' style="display: none" class='ui abs-center col dialog'>
-      <div class="header">
-        <button></button>
+  <div id='main-block' class='big rel'>
+    <h6 id='url'>www.js13k.com/home/cursed~~?666*!@*#&@</h6>
+    <div id='dialog' style='display: none' class='dialog'>
+      <div class='d-head'>
+        <em class='dot'></em>
       </div>
       <br>
-      <h3 id='ui1'>Congratulations!</h3>
-      <h5 id='ui2'>You have died</h5>
+      <h3 id='ui1'></h3>
+      <h5 id='ui2'></h5>
     </div>
-    <h3 id='score'></h3>
-    <h6 id='url'>www.js13k.com/home/cursed~~?666*!@*#&@</h6>
+    <h4 id='score'></h4>
+    <h4 id='main-text'></h4>
+    <div id='upgrade-dialog' class='col dialog abs-center'>
+      <div class='d-head'>
+        <em class='dot'></em>
+      </div>
+      <br>
+      <h5>choose your form</h5>
+      <br><br>
+      <div class='flex-center'>
+        <label class='half flex-center' id='upgrade-1'><img id='choice1' /></label>
+        <label class='half flex-center' id='upgrade-2'><img id='choice2' /></label>
+      </div>
+    </div>
+    <div id='death-dialog' class='dialog abs-center med simple col'>
+      <div class='d-head'>
+        <em class='dot'></em>
+      </div>
+      <h1 id='final-score'></h1>
+      <br>
+      <h3>YOU HAVE DIED</h3>
+      <h5>(lower scores are better...)</h5>
+      <br><br>
+      <label class='tiny flex-center' id='b-restart'><h5>try again?</h5></label>
+    </div>
     <canvas id='_canvas' class='full'>
   
     </canvas>

@@ -8,4 +8,4 @@ window.coot = function(message, d) {
 }
 
 var game = new CoreLoop(); 
-game.startLoop(); 
+game.stateLoop(); 

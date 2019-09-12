@@ -20,6 +20,8 @@ export default class {
     // Scale all drawing operations by the dpr, so you
     // don't have to worry about the difference.
     this.ctx.scale(dpr, dpr);
+    this.ctx.imageSmoothingEnabled = true;
+    
     w.bounds = {top: 0, left: 0, width: this._bounds.width, height: this._bounds.height};
     w.bounds.getCenter = _ => {
       return {x: w.bounds.width / 2, y: w.bounds.height / 2}
@@ -50,6 +52,7 @@ export default class {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+ 
   drawDeathScreen() {
     // this.ctx.fillStyle = '#222';
     // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -67,14 +70,24 @@ export default class {
     this.ctx.fillStyle = '#DEE1E6';
     this.ctx.fillRect(0, 0, this._bounds.width, 50);
 
-    this.ctx.fillStyle = '#FBFFF1';
-    this.ctx.fillRect(0, 50, this._bounds.width, this._bounds.height);
-    this.ctx.stroke();
-
     this.ctx.fillStyle = '#EEE';
     this.ctx.fillRect(100, 15, this._bounds.width - 150, 20);
 
     // this.ctx.fillRect(20, 15, 50, 20);
+  }
+
+  drawBackButton(a = 0.2) {
+    this.ctx.globalAlpha = a;
+    this.ctx.fillStyle = '#FFF';
+    this.ctx.fillRect(20, 15, 40, 20);
+    this.ctx.strokeStyle = '#888';
+    this.ctx.strokeRect(20, 15, 40, 20);
+    this.ctx.beginPath();
+    this.ctx.moveTo(40, 20);
+    this.ctx.lineTo(35, 25);
+    this.ctx.lineTo(40, 30);
+    this.ctx.stroke(); 
+    this.ctx.globalAlpha = 1;
   }
 
   drawReticule() {

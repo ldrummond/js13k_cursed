@@ -5,25 +5,27 @@ export default class extends Entity {
   constructor(opts) {
     super(opts); 
 
-    this._maxrad      = opts._maxrad || 30; 
+    this._maxrad      = opts.maxrad || 30; 
     this._collides    = false; 
     this._type        = 'explosion';
+    this._fill        = opts.fill;
   }
 
   update(ctx) {
     this._build();
-    if(this._hitrad > this._maxrad) {this._die()}
+    if(this._hitrad >= this._maxrad) {this._die(); return}
     this._render(ctx); 
   }
 
-  _render(ctx) {
-    ctx.save();
-    ctx.translate(this._pos.x, this._pos.y); 
+  _draw(ctx) {
     ctx.beginPath();
     ctx.strokeStyle = `rgba(0, 100, 0, ${0.6 - this._hitrad/ this._maxrad})`
     ctx.arc(0, 0, this._hitrad, 0, 2 * Math.PI);    
     ctx.stroke(); 
-    ctx.restore(); 
+    if(this._fill) {
+      ctx.fillStyle = this._fill;
+      ctx.fill();
+    }
   }
 }
 

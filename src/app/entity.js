@@ -15,6 +15,7 @@ export default class {
     this._constAngle  = opts.constAngle;
     this._collides    = opts.collides || true; 
     this._buildIn     = opts.buildIn || false; 
+    this._buildSpeed  = opts.buildSpeed || 1; 
 
     this._hitrad      = this._buildIn ? 1 : opts.hitrad || 5;
     this._maxrad      = opts.maxrad || this._hitrad;
@@ -40,6 +41,10 @@ export default class {
     
   }
 
+  collides(p, prad) {
+    return w.sqDist(this._pos, p) < w.sq(this._hitrad * 0.6) + w.sq(prad * 0.6)
+  }
+
   _checkBounds() {
     if(this._pos.x - this._hitrad < 2)                {return 1}           
     if(this._pos.x + this._hitrad > w.bounds.width)   {return 1} 
@@ -53,7 +58,7 @@ export default class {
 
   _build() {
     if(this._hitrad < this._maxrad) {
-      this._hitrad++
+      this._hitrad += this._buildSpeed;
     }
   }
 

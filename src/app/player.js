@@ -10,7 +10,7 @@ export default class extends Entity {
   constructor(opts) {
     super(opts); 
 
-    this._subTypes      = [
+    this.subTypes      = [
       'cPointer',
       'cRapid', 
       'cDiagonal',
@@ -21,7 +21,7 @@ export default class extends Entity {
     ]
     
     this._type        = types['player'];
-    this._subType     = this._subTypes[0];
+    this._subType     = this.subTypes[0];
     this._projType    = Projectile.getTypes()[0]; 
 
     this._speed       = 0.5;
@@ -30,17 +30,19 @@ export default class extends Entity {
     this._imgLoaded   = false; 
     this._cursorImg   = new Image();
     this.isDisabled  = false; 
-
+    
     this._cursorImg.onload = _ => {this._imgLoaded = true}
     this._initPlayerType(); 
-    // console.log(this._subType);
-    // console.log(this._projType);
   }
   
   _initPlayerType() {
+
     switch(this._subType) {
       case 'cPointer':
         this._cursorImg.src = cursors[0];
+        this._shots       = 1;
+        this._firerate    = 14; 
+        this._projType    = Projectile.getTypes()[0]; 
         break;
         
       case 'cRapid':
@@ -84,8 +86,22 @@ export default class extends Entity {
     }
   }
 
+  reset() {
+    this.isDisabled = false; 
+    this.isDead     = false; 
+    this._pos.x     = w.bounds.getCenter().x;
+    this._pos.y     = w.bounds.getCenter().y;
+    this._vel.x     = 0;
+    this._vel.y     = 0;
+  }
+
   nextType() {
-    this._subType = w.next(this._subTypes, this._subType);
+    this._subType = w.next(this.subTypes, this._subType);
+    this._initPlayerType();
+  }
+
+  setType(type) {
+    this._subType = type;
     this._initPlayerType();
   }
 
@@ -117,7 +133,7 @@ export default class extends Entity {
   }
 
   update(ctx) {
-    this._build();
+    if(this._buildIn)     {this._build()}
     this._checkCollisions();
     this._updatePos();
 
