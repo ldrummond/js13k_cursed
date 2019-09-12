@@ -1,11 +1,12 @@
 import w from './w';
 
-export default class {
+class UI {
   constructor() {
-    console.log();
     this._texts     = [];
     this._numTexts  = 50;
+    this._main      = document.getElementById('main-block');
     this._dialog    = document.getElementById('dialog');
+    this._url       = document.getElementById('url');
     this._ui1       = document.getElementById('ui1');
     this._ui2       = document.getElementById('ui2');
 
@@ -22,9 +23,19 @@ export default class {
     }, 100)
   }
 
+  createDialog() {
+    let d = this._dialog.cloneNode(true);
+    d.style = `top: ${30 + w.ranInt(40)}vh; left:${30 + w.ranInt(40)}vw;`
+    this._main.append(d);
+  }
+
   death() {
     this.setMainText('You have died');
     this._showDialog(); 
+  }
+
+  setUrl(text) {
+    this._url.textContent = text; 
   }
 
   setMainText(text) {
@@ -39,3 +50,5 @@ export default class {
     this._dialog.classList.add('visible');
   }
 }
+
+export default new UI(); 

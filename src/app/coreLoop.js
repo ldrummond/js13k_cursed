@@ -17,7 +17,7 @@ export default class {
     this._ctx       = this._cc.ctx;
 
     // UI
-    this._ui        = new UIController(); 
+    this._ui        = UIController; 
 
     // Enemies
     this.spawnPoints = [
@@ -26,25 +26,30 @@ export default class {
 
     // Initialize Game State;
     this._introSeq      = false; 
-    this._state         = 'INTRODUCTION'; 
+    this._state         = 'START_LEVEL'; 
     this._level         = 0; 
     this._levels        = levels;
 
     // Player
-    w.player      = new Player(); 
+    w.player      = new Player({
+      buildIn: true,
+      hitrad: 15,
+      maxrad: 15,
+    }); 
 
     // Track Entities
     this._remaining = w.entities; 
 
     // Loop
     this._prevtime = Date.now(); 
-    this._framerate = 100; 
+    this._framerate = 10; 
   }
 
 
-
   _startLevel(i) {
+    w.entities = []; 
     let level = this._levels[i]; 
+    this._ui.setUrl('____cursed____/' + (this._levels.length - i));
 
     // Add player
     w.player = new Player(); 
@@ -80,7 +85,12 @@ export default class {
               this._state = 'START_LEVEL';
             }
           }
+          this._play();
           break; 
+
+        case 'CHOOSE_UPGRADE':
+          // this._state = 'PLAYING';
+          break;
 
         case 'START_LEVEL':
           this._startLevel(this._level);
@@ -90,7 +100,7 @@ export default class {
         case 'LEVEL_CLEAR':
           w.entities = [];
           this._level++;
-          this._state = 'START_LEVEL'
+          this._state = 'CHOOSE_UPGRADE'
           break; 
 
         case 'DEAD':
@@ -102,11 +112,9 @@ export default class {
         case 'PLAYING':
           if(w.player.isDead) {
             this._state = 'DEAD'; 
-            // break; 
           }
           if(w.entities.filter(e => e._type === types['enemy']).length === 0) {
             this._state = 'LEVEL_CLEAR'; 
-            // break; 
           }
           this._play();
           break; 
@@ -125,8 +133,9 @@ export default class {
       w.entities = w.entities.sort((a,b) => a._type - b._type);
 
       this._remaining = []; 
-      for(let i=0;i<w.entities.length;i++){
+      for(let i=0; i<w.entities.length; i++){
         let e = w.entities[i];
+        // console.log(e)
         if(!e.isDead) {
           e.update(this._ctx);
           this._remaining.push(e); 

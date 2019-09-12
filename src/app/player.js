@@ -10,11 +10,6 @@ export default class extends Entity {
   constructor(opts) {
     super(opts); 
 
-    this._speed       = 0.5;
-    this._cursorType  = 'basic'; 
-    this._hitrad      = 15;
-    this._type        = types['player'];
-
     this._subTypes      = [
       'cPointer',
       'cRapid', 
@@ -24,13 +19,17 @@ export default class extends Entity {
       'cQuestion',
       'cFinger',
     ]
+    
+    this._type        = types['player'];
+    this._subType     = this._subTypes[0];
+    this._projType    = Projectile.getTypes()[0]; 
 
-    this._subType     = this._subTypes[0]
+    this._speed       = 0.5;
     this._shots       = 1;
     this._firerate    = 14; 
-    this._projType    = Projectile.getTypes()[0]; 
     this._imgLoaded   = false; 
     this._cursorImg   = new Image();
+    this.isDisabled  = false; 
 
     this._cursorImg.onload = _ => {this._imgLoaded = true}
     this._initPlayerType(); 
@@ -85,6 +84,11 @@ export default class extends Entity {
     }
   }
 
+  nextType() {
+    this._subType = w.next(this._subTypes, this._subType);
+    this._initPlayerType();
+  }
+
   _handleCollisions(cols) {
     cols.map(c => {
       if(c._type === types['enemy']) {this._die()}
@@ -113,22 +117,22 @@ export default class extends Entity {
   }
 
   update(ctx) {
+    this._build();
     this._checkCollisions();
+    this._updatePos();
 
-    this._pos.x     += this._vel.x * this._speed;
-    this._pos.y     -= this._vel.y * this._speed;
-    this._pos.angle = this._constAngle || getAngle(this._pos, this._target); 
+    if(!player.isDisabled) {
+      if(w.keyMap&w.keys[87]) {this._vel.y += this._speed} // W
+      if(w.keyMap&w.keys[65]) {this._vel.x -= this._speed} // A
+      if(w.keyMap&w.keys[83]) {this._vel.y -= this._speed} // S
+      if(w.keyMap&w.keys[68]) {this._vel.x += this._speed} // D
+      if(w.keyMap&w.keys[32]) {this._shoot()} // Space
+    }
 
-    if(w.keyMap&w.keys[87]) {this._vel.y += this._speed} // W
-    if(w.keyMap&w.keys[65]) {this._vel.x -= this._speed} // A
-    if(w.keyMap&w.keys[83]) {this._vel.y -= this._speed} // S
-    if(w.keyMap&w.keys[68]) {this._vel.x += this._speed} // D
-    if(w.keyMap&w.keys[32]) {this._shoot()} // Space
+    this._updateVel();
 
-    this._vel.x *= this._vel.x > 0.1 || this._vel.x < 0.1 ? 0.95 : 0; 
-    this._vel.y *= this._vel.y > 0.1 || this._vel.y < 0.1 ? 0.95 : 0; 
-
-    switch(this._outOfBounds()) {
+    // this._bounce(); 
+    switch(this._checkBounds()) {
       case 1: this._vel.x *= -1; break;
       case 2: this._vel.y *= -1; break;
     }
@@ -142,8 +146,8 @@ export default class extends Entity {
     ctx.rotate(this._pos.angle + Math.PI / 2);
 
     if(this._imgLoaded) {
-      let w = this._cursorImg.width * 1.5;
-      let h = this._cursorImg.height * 1.5;
+      let w = this._cursorImg.width * 1.5 * this._hitrad / this._maxrad;
+      let h = this._cursorImg.height * 1.5 * this._hitrad / this._maxrad;
       ctx.drawImage(this._cursorImg, -w / 2, -h / 2, w, h);
     } else {
       ctx.fillStyle = 'black';
@@ -159,7 +163,7 @@ export default class extends Entity {
     }
 
     // DEBUG
-    if(w.DEBUG){this._drawHitbox(ctx)} 
+    // if(w.DEBUG){this._drawHitbox(ctx)} 
 
     ctx.restore(); 
   }

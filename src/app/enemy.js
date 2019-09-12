@@ -67,7 +67,7 @@ export default class extends Entity {
     this._vel.x *= this._vel.x > 0.1 || this._vel.x < 0.1 ? 0.95 : 0; 
     this._vel.y *= this._vel.y > 0.1 || this._vel.y < 0.1 ? 0.95 : 0; 
 
-    switch(this._outOfBounds()) {
+    switch(this._checkBounds()) {
       case 1: this._vel.x *= -1; break;
       case 2: this._vel.y *= -1; break;
     }

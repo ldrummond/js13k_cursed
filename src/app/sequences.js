@@ -1,13 +1,20 @@
 import w from './w'; 
+import ui from './ui'; 
 
 export default {
   introduction: [
     {
       action: _ => {
         w.player.moveTo(w.bounds.getCenter());
-        console.log(w.bounds.center)
+        w.player.isDisabled = true; 
+        w.entities.push(w.player);
+        // ui.createDialog(); 
       }, 
-      endtick: 10
+      onTick: _ => {
+        w.player.nextType(); 
+      },
+      tickInterval: 30,
+      endtick: 1000
     },
     {
       action: _ => {

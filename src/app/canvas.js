@@ -67,27 +67,27 @@ export default class {
     this.ctx.fillStyle = '#DEE1E6';
     this.ctx.fillRect(0, 0, this._bounds.width, 50);
 
-    this.ctx.fillStyle = '#EEE';
-    this.ctx.fillRect(0, 50, this._bounds.width, 90);
+    this.ctx.fillStyle = '#FBFFF1';
+    this.ctx.fillRect(0, 50, this._bounds.width, this._bounds.height);
     this.ctx.stroke();
 
     this.ctx.fillStyle = '#EEE';
     this.ctx.fillRect(100, 15, this._bounds.width - 150, 20);
 
-    this.ctx.fillRect(20, 15, 50, 20);
+    // this.ctx.fillRect(20, 15, 50, 20);
   }
 
   drawReticule() {
-    let size = 15; 
-    this.ctx.beginPath(); 
-    this.ctx.moveTo(this.cursor.x - size / 2, this.cursor.y);
-    this.ctx.lineTo(this.cursor.x + size / 2, this.cursor.y);
-    this.ctx.stroke(); 
-    this.ctx.beginPath();     
-    this.ctx.moveTo(this.cursor.x, this.cursor.y - size / 2);
-    this.ctx.lineTo(this.cursor.x, this.cursor.y + size / 2);
-    this.ctx.stroke(); 
-    this.ctx.strokeRect(w.bounds.left, w.bounds.top, w.bounds.width, w.bounds.height);
+    // let size = 15; 
+    // this.ctx.beginPath(); 
+    // this.ctx.moveTo(this.cursor.x - size / 2, this.cursor.y);
+    // this.ctx.lineTo(this.cursor.x + size / 2, this.cursor.y);
+    // this.ctx.stroke(); 
+    // this.ctx.beginPath();     
+    // this.ctx.moveTo(this.cursor.x, this.cursor.y - size / 2);
+    // this.ctx.lineTo(this.cursor.x, this.cursor.y + size / 2);
+    // this.ctx.stroke(); 
+    // this.ctx.strokeRect(w.bounds.left, w.bounds.top, w.bounds.width, w.bounds.height);
   }
 
   drawLoader() {

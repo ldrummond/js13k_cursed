@@ -21,5 +21,10 @@ export default class {
       s.action(); 
       s.executed = true; 
     }
+    if(s && s.tickInterval && s.onTick) {
+      if(this._elapsedticks % s.tickInterval == 0) {
+        s.onTick(); 
+      }
+    }
   }
 }

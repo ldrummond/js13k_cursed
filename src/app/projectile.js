@@ -73,7 +73,8 @@ export default class extends Entity {
   }
 
   _die() {
-    w.entities.push(new Explosion({pos: this._pos}))
+    let e = new Explosion({pos: this._pos});
+    w.entities.push(e);
     this.isDead = true;
   }
 
@@ -93,7 +94,7 @@ export default class extends Entity {
 
   update(ctx) {
     this._checkCollisions();
-    if(this._outOfBounds()) {this._die()};
+    if(this._checkBounds()) {this._die()};
 
     this._pos.x     += this._vel.x * this._speed;
     this._pos.y     -= this._vel.y * this._speed;
