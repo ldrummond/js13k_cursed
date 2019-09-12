@@ -23,7 +23,7 @@ export default class extends Entity {
     ctx.arc(0, 0, this._hitrad, 0, 2 * Math.PI);    
     ctx.stroke(); 
     if(this._fill) {
-      ctx.fillStyle = this._fill;
+      ctx.fillStyle = this.fill;
       ctx.fill();
     }
   }

@@ -20,7 +20,7 @@ export default class {
     // Scale all drawing operations by the dpr, so you
     // don't have to worry about the difference.
     this.ctx.scale(dpr, dpr);
-    this.ctx.imageSmoothingEnabled = true;
+    this.ctx.imageSmoothingEnabled = false;
     
     w.bounds = {top: 0, left: 0, width: this._bounds.width, height: this._bounds.height};
     w.bounds.getCenter = _ => {
@@ -42,7 +42,6 @@ export default class {
         x: e.clientX - this._bounds.left,
         y: e.clientY - this._bounds.top
       };
-      // window.coot(this.cursor, 10);
     })
 
     this.cursor     = {x: this.canvas.width / 2, y: this.canvas.height / 2}
@@ -59,29 +58,23 @@ export default class {
   }
 
   drawBackground() {
-    // this.ctx.beginPath();
-    // this.ctx.moveTo(1, 1);
-    // this.ctx.lineTo(1, this.canvas.height-1);
-    // this.ctx.lineTo(this.canvas.height-1, this.canvas.height-1);
-    // this.ctx.lineTo(this.canvas.height-1, 1);
-    // this.ctx.lineTo(1, 1);
-    // this.ctx.strokeWidth = 10;
-    
     this.ctx.fillStyle = '#DEE1E6';
-    this.ctx.fillRect(0, 0, this._bounds.width, 50);
+    this.ctx.fillRect(0, 0, 100, 50);
+    this.ctx.fillRect(this._bounds.width - 50, 0, this._bounds.width, 50);
+    this.ctx.fillRect(100, 0, this._bounds.width - 150, 15);
+    this.ctx.fillRect(100, 35, this._bounds.width - 150, 15);
 
     this.ctx.fillStyle = '#EEE';
-    this.ctx.fillRect(100, 15, this._bounds.width - 150, 20);
-
-    // this.ctx.fillRect(20, 15, 50, 20);
+    // this.ctx.fillRect(100, 15, this._bounds.width - 150, 20);
   }
 
-  drawBackButton(a = 0.2) {
+  drawBackButton(a = 0.2, tick = 1) {
     this.ctx.globalAlpha = a;
     this.ctx.fillStyle = '#FFF';
     this.ctx.fillRect(20, 15, 40, 20);
-    this.ctx.strokeStyle = '#888';
+    this.ctx.strokeStyle = tick ? `hsl(${tick % 255}, 100%, 40%)` : '#888';
     this.ctx.strokeRect(20, 15, 40, 20);
+    this.ctx.strokeStyle = '#888';
     this.ctx.beginPath();
     this.ctx.moveTo(40, 20);
     this.ctx.lineTo(35, 25);

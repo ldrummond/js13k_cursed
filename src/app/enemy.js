@@ -9,20 +9,23 @@ export default class extends Entity {
   constructor(opts = {}) {
     super(opts); 
 
+    this._subType     = opts.subType || 'floater';
     this._speed       = 0.5;
-    this._eType       = opts._eType || 'floater';
     this._type        = types['enemy'];
-    this._hitrad = 30; 
 
-    switch(this._eType) {
+    switch(this._subType) {
       case 'floater':
+        this._maxrad = 30;
+        this._hitrad = 1;
         this._health = 1;
         break; 
 
       case 'sniper':
-        this._health = 2;
+        opts.health = 2;
         break;
     }
+
+
   }
 
   _die() {
@@ -49,9 +52,11 @@ export default class extends Entity {
   }
 
   update(ctx) {
-    if(this._health === 0) {this._die()}
+    if(this._buildIn)       {this._build()}
+    if(this._health === 0)  {this._die()}
+    this._checkCollisions();
 
-    switch(this._eType) {
+    switch(this._subType) {
       case 'floater':
         if(w.oneIn(100)) {this._changeTarget()}
         this._vel.x += Math.cos(this._pos.angle) / 10;
@@ -64,25 +69,16 @@ export default class extends Entity {
         break; 
     }
 
-    this._vel.x *= this._vel.x > 0.1 || this._vel.x < 0.1 ? 0.95 : 0; 
-    this._vel.y *= this._vel.y > 0.1 || this._vel.y < 0.1 ? 0.95 : 0; 
-
-    switch(this._checkBounds()) {
-      case 1: this._vel.x *= -1; break;
-      case 2: this._vel.y *= -1; break;
-    }
-
+    this._bounce(); 
+    this._updateVel();
     this._render(ctx); 
   }
 
-
-  _render(ctx) {
-    ctx.save();
-    ctx.translate(this._pos.x, this._pos.y); 
+  _draw(ctx) {
     ctx.strokeWidth = 2; 
-    let r = this._hitrad
+    let r = this._hitrad;
     
-    switch(this._eType) {
+    switch(this._subType) {
       case 'floater':
         ctx.rotate(Math.PI / 4);
         ctx.fillStyle = 'white';
@@ -93,11 +89,6 @@ export default class extends Entity {
       case 'sniper':
         break; 
     }
-
-    // DEBUG
-    if(w.DEBUG){this._drawHitbox(ctx)} 
-
-    ctx.restore(); 
   }
 }
 

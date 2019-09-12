@@ -146,13 +146,7 @@ export default class extends Entity {
     }
 
     this._updateVel();
-
-    // this._bounce(); 
-    switch(this._checkBounds()) {
-      case 1: this._vel.x *= -1; break;
-      case 2: this._vel.y *= -1; break;
-    }
-
+    this._bounce(); 
     this._render(ctx); 
   }
 

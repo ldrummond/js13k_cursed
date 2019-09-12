@@ -19,9 +19,12 @@ export default class {
 
     // UI
     this._ui        = UIController; 
-    document
-      .getElementById('b-restart')
-      .addEventListener('click', _ => this._restart());
+
+    // Restart Buttons
+    this._restartBs = document.getElementsByClassName('b-restart');
+    for(let i = 0; i < this._restartBs.length; i++) {
+      this._restartBs[i].addEventListener('click', _ => this._restart());
+    }
 
     // Enemies
     this.spawnPoints = [
@@ -39,6 +42,8 @@ export default class {
     this._state         = 'INTRODUCTION'; 
     this._level         = 0; 
     this._levels        = levels;
+    w._level            = 0;
+    w._levels           = levels; 
 
     // Player
     w.player      = new Player({
@@ -69,9 +74,9 @@ export default class {
   }
 
   _startLevel(i) {
-    w.entities = []; 
-    let level = this._levels[i]; 
-    this._ui.setUrl('____cursed____/?level=' + (this._levels.length - i));
+    w.entities  = []; 
+    w._level    = i; 
+    let level   = this._levels[i];
 
     // Add player
     w.player.reset();
@@ -81,11 +86,11 @@ export default class {
     Object.keys(level.enemies).map(eType => {
       let eCount = level.enemies[eType]; 
       for(let i=0; i<eCount; i++) {
-        w.entities.push(new Enemy({
+        setTimeout(_ => w.entities.push(new Enemy({
           pos: {x: w.ran(w.bounds.width), y: w.ran(w.bounds.height), angle: 0},
           type: eType, 
           buildIn: true,
-        }));      
+        })), 150 * i);      
       }
     });
   }
@@ -94,8 +99,6 @@ export default class {
     // If its been enough time since previous frame--
     if((Date.now() - this._prevtime) > this._framerate) {
       this._prevtime  = Date.now(); 
-      
-      // console.log(this._state);
       this._ui.setState(this._state);
 
       // Change state
@@ -140,9 +143,14 @@ export default class {
           break;
 
         case 'LEVEL_CLEAR':
-          this._level++;
-          this._state = 'WAIT_CHOOSE_BACK';
-          w.entities.push(new Explosion({pos: this._backPos}))
+          console.log(this._level, this._levels.length)
+          if(this._level + 1 < this._levels.length) {
+            this._level++;
+            this._state = 'WAIT_CHOOSE_BACK';
+            w.entities.push(new Explosion({pos: this._backPos}))
+          } else {
+            this._state = 'START_WIN';
+          }
           break; 
 
         case 'WAIT_CHOOSE_BACK':
@@ -155,7 +163,16 @@ export default class {
             }))
             this._state     = 'START_CHOOSE_UPGRADES';
           }
-          this._backAlpha = 1;
+          this._play();
+          this._cc.drawBackButton(1, w.tick); 
+          break; 
+
+        case 'START_WIN':
+          this._ui.setFinalScore(this._score);
+          this._state = 'WAIT_WIN';
+          break; 
+
+        case 'WAIT_WIN':
           this._play();
           break; 
 
@@ -196,7 +213,6 @@ export default class {
       this._cc.ctx.beginPath();
       this._cc.clear(); 
       this._cc.drawBackground(); 
-      this._cc.drawBackButton(this._backAlpha); 
       
       w.player._target = this._cc.cursor;
       w.entities = w.entities.sort((a,b) => a._type - b._type);

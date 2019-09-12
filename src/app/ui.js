@@ -3,26 +3,25 @@ import cursors from './cursors';
 
 class UI {
   constructor(opts = {}) {
-    this._texts     = [];
-    this._numTexts  = 100;
-    this._main      = document.getElementById('main-block');
-    this._dialog    = document.getElementById('dialog');
-    this._url       = document.getElementById('url');
-    this._ui1       = document.getElementById('ui1');
-    this._ui2       = document.getElementById('ui2');
+    this._texts         = [];
+    this._numTexts      = 100;
 
-    this._mainText  = document.getElementById('main-text');
+    this._main          = document.getElementById('main-block');
+    this._dialog        = document.getElementById('dialog');
+    
+    this._url           = document.getElementById('url');
+    this._mainText      = document.getElementById('main-text');
+    this._score         = document.getElementById('score');
+    this._finalScoreBs  = document.getElementsByClassName('final-score');
 
-    this._deathDialog = document.getElementById('death-dialog');
+    this._deathDialog   = document.getElementById('death-dialog');
     this._upgradeDialog = document.getElementById('upgrade-dialog');
+    this._winDialog     = document.getElementById('win-dialog');
 
-    this._finalScore = document.getElementById('final-score');
-    this._score = document.getElementById('score');
-
-    this._choice1   = document.getElementById('choice1');
-    this._upgrade1   = document.getElementById('upgrade-1');
-    this._choice2   = document.getElementById('choice2');
-    this._upgrade2   = document.getElementById('upgrade-2');
+    this._choice1       = document.getElementById('choice1');
+    this._upgrade1      = document.getElementById('upgrade-1');
+    this._choice2       = document.getElementById('choice2');
+    this._upgrade2      = document.getElementById('upgrade-2');
 
     this._typeOuts = [];
 
@@ -47,9 +46,13 @@ class UI {
   } 
 
   typeOut(target, string) {
+    if(!this._typeOuts[target.id]) {this._typeOuts[target.id] = []}
+    else {
+      this._typeOuts[target.id].map(t => clearTimeout(t));
+    }
     target.textContent = ''; 
     for(let i = 0; i < string.length; i++) {
-      this._typeOuts.push(setTimeout(_ => target.textContent += string[i], 100 * i));
+      this._typeOuts[target.id].push(setTimeout(_ => target.textContent += string[i], 100 * i));
     }
   }
 
@@ -68,12 +71,20 @@ class UI {
         
       case 'START_LEVEL':
         this.clearDialogs(); 
-        this._typeOuts.map(t => clearTimeout(t));
-        this._upgradeDialog.classList.remove('visible');
+        console.log(w._levels.length, w._level);
+        this.typeOut(this._url, '____cursed____/?level=' + (w._levels.length - w._level));
         break;
-          
+
+      case 'START_WIN':
+        this.clearDialogs(); 
+        this._winDialog.classList.add('visible', 'flex-center');
+        break;
+        
       case 'PLAYING':
-        this._mainText.textContent = '';
+        if(this._prevState !== this._state) {
+          // this._typeOuts.map(t => clearTimeout(t));
+          this.typeOut(this._mainText, 'W, A, S, D, SPACE to shoot');
+        }
         break;
 
       case 'DEAD':
@@ -90,7 +101,9 @@ class UI {
   }
 
   setFinalScore(score) {
-    this._finalScore.textContent = score;
+    for(let i=0; i< this._finalScoreBs.length; i++) {
+      this._finalScoreBs[i].textContent = score;
+    }
   }
 
   showUpgrades(opts = {}) {
@@ -130,25 +143,8 @@ class UI {
     this._main.append(d);
   }
 
-  death() {
-    this.setMainText('You have died');
-    this._showDialog(); 
-  }
-
   setUrl(text) {
     this.typeOut(this._url, text);
-  }
-
-  setMainText(text) {
-    this._ui1 = text;
-  }
-
-  setSecondaryText(text) {
-    this._ui2 = text;
-  }
-
-  _showDialog() {
-    this._dialog.classList.add('visible', 'abs-center');
   }
 }
 

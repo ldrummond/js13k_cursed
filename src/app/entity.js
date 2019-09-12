@@ -14,6 +14,7 @@ export default class {
     this._vel         = opts.vel ? {...opts.vel} : {x: 0,  y: 0};
     this._constAngle  = opts.constAngle;
     this._collides    = opts.collides || true; 
+    
     this._buildIn     = opts.buildIn || false; 
     this._buildSpeed  = opts.buildSpeed || 1; 
 
@@ -62,6 +63,13 @@ export default class {
     }
   }
 
+  _bounce() {
+    switch(this._checkBounds()) {
+      case 1: this._vel.x *= -1; break;
+      case 2: this._vel.y *= -1; break;
+    }
+  }
+
   _updatePos() {
     this._pos.x     += this._vel.x * this._speed;
     this._pos.y     -= this._vel.y * this._speed;
@@ -74,8 +82,8 @@ export default class {
   }
  
   update(ctx) {
-    if(this.health <= 0)  {this._die()}
     if(this._buildIn)     {this._build()}
+    if(this.health <= 0)  {this._die()}
     if(this.collides)     {this._checkCollisions()}; 
 
     this._updatePos();

@@ -84,8 +84,8 @@ label img {
 }
 
 .med {
-  min-width: 500px;
-  min-height: 250px;
+  min-width: 450px;
+  min-height: 200px;
 }
 
 .small {
@@ -148,6 +148,7 @@ label img {
   display: flex;
   justify-content: center;
   align-items: center; 
+  text-align: center;
 }
 
 .col {
@@ -172,8 +173,16 @@ label img {
   z-index: 0;
 }
 
+#head {
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  height: 50px;
+  background: rgb(243, 243, 243);
+}
+
 h1,h2,h3,h4,h5 {
-  z-index: -1;
+  z-index: -5;
 }
 
 #_canvas {
@@ -187,14 +196,16 @@ h1,h2,h3,h4,h5 {
   position: absolute;
   top: 19px;
   left: 110px;
+  z-index: -5;
 }
 
 #main-text {
   position: absolute;
   top: 70px;
   left: 20px;
-  color: #aaa;
+  color: rgb(90, 90, 90);
   font-weight: 100;
+  font-family: 'Courier New', Courier, monospace,
 }
 
 #score {
