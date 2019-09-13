@@ -1,14 +1,17 @@
 # CURSED 
-### js13k entry 2019
+js13k entry 2019
+
+*****
+You, a shapeshifting cursor, were cursed, losing your ability to change shape and 
+cast forward through browser windows. Find your shapes as you travel back to your home. 
 
 ## Controls
-
-### W - up
-### A - left
-### S - down
-### D - right
-### Space - fire
-### Cursor - aim 
+W - up
+A - left
+S - down
+D - right
+Space - fire
+Cursor - aim 
 
 ## Author
 Lucas Drummond 
