@@ -78,6 +78,7 @@ export default class {
     // Add player
     // w.player.reset();
     w.player.moveTo(w._b.getCenter());
+    w.player.isDisabled = false;
     w.entities.push(player);
     
     // Add enemies
@@ -100,8 +101,12 @@ export default class {
             spawn: (i + j) % 4, 
             subType: eType, 
             buildIn: true,
-            buildSpeed: 20,
+            // buildSpeed: 20,
           });
+          while(w.sqDist(w._b.getCenter(), w._b.spawnPoints[(i + j) % 4]) < w.sq(200) && k < 20) {
+            e._pos = {x: w.ran(w._b.width), y: w.ran(w._b.height), angle: 0};
+            k++;
+          }
           w.entities.push(e);
           this._spawned++; 
         }, 1000 * i);      
@@ -198,7 +203,10 @@ export default class {
             },
           }); 
           if(!w._levels[w._level].hasUpgrades) {
-            setTimeout(_ => this._state = 'START_LEVEL', 4000);
+            setTimeout(_ => {
+              this._ui.clearDialogs();
+              this._state = 'START_LEVEL';
+            }, 5000);
           }
           this._state = 'WAIT_CHOOSE_UPGRADES';
           break; 
@@ -209,7 +217,6 @@ export default class {
 
         case 'START_LEVEL':
           this._backAlpha = 0.2;
-          this._ui.clearDialogs();
           this._startLevel(this._level);
           this._state = 'PLAYING';
           break;

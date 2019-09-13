@@ -57,7 +57,7 @@ export default class extends Entity {
 
       case 'cBomb':
         t._shots         = 1;
-        t._firerate      = 50; 
+        t._firerate      = 30; 
         t._projType      = Projectile.getTypes()[2]; 
         break;
 

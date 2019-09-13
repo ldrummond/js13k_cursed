@@ -58,9 +58,9 @@ export default [
     enemies: {
       'floater' : 5,
       'sniper'  : 0,
-      'seeker'  : 0, 
-      'launcher': 3,
-      'bomber'  : 1,
+      'seeker'  : 2, 
+      'launcher': 2,
+      'bomber'  : 3,
     },
   },
   {
@@ -69,20 +69,30 @@ export default [
     up2: 'cBomb',
     enemies: {
       'floater' : 5,
-      'sniper'  : 0,
+      'sniper'  : 1,
       'seeker'  : 10, 
       'launcher': 0,
-      'bomber'  : 3,
+      'bomber'  : 5,
     },
   },
   {
     hasUpgrades: false,     
     enemies: {
       'floater' : 5,
-      'sniper'  : 0,
+      'sniper'  : 1,
       'seeker'  : 5, 
       'launcher': 2,
       'bomber'  : 2,
+    },
+  },
+  {
+    hasUpgrades: false,     
+    enemies: {
+      'floater' : 0,
+      'sniper'  : 4,
+      'seeker'  : 20, 
+      'launcher': 0,
+      'bomber'  : 0,
     },
   },
   {

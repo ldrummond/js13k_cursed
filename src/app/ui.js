@@ -81,10 +81,6 @@ class UI {
         }
         break;
         
-      case 'WAIT_CHOOSE_UPGRADE':
-        this._mainText.textContent = '';
-        break;
-        
       case 'START_LEVEL':
         this.clearDialogs(); 
         setTimeout(_ => {

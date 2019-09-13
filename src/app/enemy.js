@@ -61,7 +61,7 @@ export default class extends Entity {
         t._p    = w._b.spawnPoints[t._spawn];
         t._p.angle = getAngle(t._p, w.player._p);
         t._v    = {x: 0, y: 0}
-        t._speed  = 0.5;
+        t._speed  = 0.2;
         t._maxrad = 100;
         t._hitrad = 80;
         t._health = 20;
