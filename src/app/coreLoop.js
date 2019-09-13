@@ -33,8 +33,8 @@ export default class {
 
       // Initialize Game State;
       this._introSeq      = false; 
-      this._state         = 'INTRODUCTION'; 
-      this._level         = 0; 
+      this._state         = 'START_LEVEL'; 
+      this._level         = 7; 
       this._levels        = levels;
       w._level            = this._level;
       w._levels           = levels; 
@@ -84,9 +84,11 @@ export default class {
     // Add enemies
     this._spawned = 0;
     this._tospawn = 0; 
+    let z         = 0;
     Object.keys(level.enemies).map(eType => {
       let j      = w.ranInt(4);
       let eCount = level.enemies[eType]; 
+      z++;
       for(let i=0; i < eCount; i++) {
         this._tospawn++ 
         setTimeout(_ => {
@@ -109,7 +111,7 @@ export default class {
           }
           w.entities.push(e);
           this._spawned++; 
-        }, 1000 * i);      
+        }, 700 * i + Math.abs((5 - z) * 1500));      
       }
     });
   }

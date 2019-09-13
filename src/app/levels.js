@@ -78,11 +78,11 @@ export default [
   {
     hasUpgrades: false,     
     enemies: {
-      'floater' : 5,
+      'floater' : 25,
       'sniper'  : 1,
       'seeker'  : 5, 
-      'launcher': 2,
-      'bomber'  : 2,
+      'launcher': 1,
+      'bomber'  : 0,
     },
   },
   {
@@ -90,22 +90,31 @@ export default [
     enemies: {
       'floater' : 0,
       'sniper'  : 4,
-      'seeker'  : 20, 
+      'seeker'  : 25, 
       'launcher': 0,
       'bomber'  : 0,
     },
   },
   {
-    hasUpgrades: false, 
-    // up1: 'cQuestion',
-    // up2: 'cFinger',
+    hasUpgrades: false,     
     enemies: {
-      'floater' : 12,
-      'sniper'  : 3,
+      'floater' : 0,
+      'sniper'  : 1,
+      'seeker'  : 20, 
+      'launcher': 0,
+      'bomber'  : 5,
+      'boss'    : 1,
+    },
+  },
+  {
+    hasUpgrades: false, 
+    enemies: {
+      'floater' : 0,
+      'sniper'  : 0,
       'seeker'  : 5, 
       'launcher': 0,
-      'bomber'  : 1,
-      'boss'    : 1,
+      'bomber'  : 0,
+      'boss'    : 2,
     },
   },
 ]

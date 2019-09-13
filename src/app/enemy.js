@@ -44,7 +44,8 @@ export default class extends Entity {
         break; 
 
       case 'launcher':
-        t._p        = w._b.spawnPoints[t._spawn];
+        t._p.x      = w._b.spawnPoints[t._spawn].x;
+        t._p.y      = w._b.spawnPoints[t._spawn].y;
         t._p.angle  = getAngle(t._p, w.player._p);
         t._speed    = 0.1;
         t._maxrad   = 120;
@@ -58,9 +59,10 @@ export default class extends Entity {
         break; 
 
       case 'bomber':
-        t._p    = w._b.spawnPoints[t._spawn];
+        t._p.x      = w._b.spawnPoints[t._spawn].x;
+        t._p.y      = w._b.spawnPoints[t._spawn].y;
         t._p.angle = getAngle(t._p, w.player._p);
-        t._v    = {x: 0, y: 0}
+        t._v      = {x: 0, y: 0}
         t._speed  = 0.2;
         t._maxrad = 100;
         t._hitrad = 80;
@@ -71,7 +73,8 @@ export default class extends Entity {
         break; 
 
       case 'boss':
-        t._p    = w._b.spawnPoints[t._spawn];
+        t._p.x      = w._b.spawnPoints[t._spawn].x;
+        t._p.y      = w._b.spawnPoints[t._spawn].y;
         t._p.angle = getAngle(t._p, w.player._p);
         t._v    = {x: 0, y: 0}
         t._speed  = 0.1;
