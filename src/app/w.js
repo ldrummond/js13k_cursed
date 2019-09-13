@@ -1,15 +1,36 @@
 let w = window;
 
-w.DEBUG = false;  
+// w.DEBUG = true;  
 w.entities = [];
 w.tick = 0; 
 
-w.restart = _ => {
+// 
+w.queueOnLoad = [];
 
-};
+// 
+w.addEventListener('DOMContentLoaded', _ => {
+  w.queueOnLoad.map(executable => {
+    executable(); 
+  });
+});
 
 // set in canvas
-w.getCenter = _ => {};
+w._b    = {};
+w._b.getCenter    = _ => {};
+w._b.ranPos       = _ => {};
+w._b.spawnPoints  = []
+
+w.circ = (x, y, r, ctx) => {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+}
+
+// 
+w.dToRad = deg => {
+  return (deg * Math.PI) / 180;
+}
 
 // 
 w.sq = i => Math.pow(i,2)
@@ -26,6 +47,9 @@ w.hyp = (p1, p2) => {
 
 // 
 w.ran = (i = 1) => Math.random() * i; 
+
+// 
+w.ranRad = _ => Math.PI / 30 * Math.random();
 
 // 
 w.ranNorm = (i = 1) => (Math.random() - 0.5) * i;

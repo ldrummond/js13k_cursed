@@ -9,90 +9,84 @@ import Entity from "./entity";
 export default class extends Entity {
   constructor(opts) {
     super(opts); 
+    let t = this;
 
-    this.subTypes      = [
-      'cPointer',
-      'cRapid', 
-      'cDiagonal',
-      'cCross',
-      'cBomb',
-      'cQuestion',
-      'cFinger',
-    ]
-    
-    this._type        = types['player'];
-    this._subType     = this.subTypes[0];
-    this._projType    = Projectile.getTypes()[0]; 
+    t.subTypes     = Object.keys(cursors); 
+    t._type        = types['player'];
+    t._subType     = t.subTypes[0];
+    t._projType    = Projectile.getTypes()[0]; 
 
-    this._speed       = 0.5;
-    this._shots       = 1;
-    this._firerate    = 14; 
-    this._imgLoaded   = false; 
-    this._cursorImg   = new Image();
-    this.isDisabled  = false; 
+    t._health      = 3; 
+    t._speed       = 0.5;
+    t._shots       = 1;
+    t._firerate    = 14; 
+    t._imgLoaded   = false; 
+    t._cursorImg   = new Image();
+    t.isDisabled  = false; 
     
-    this._cursorImg.onload = _ => {this._imgLoaded = true}
-    this._initPlayerType(); 
+    t._cursorImg.onload = _ => {t._imgLoaded = true}
+    t._initPlayerType(); 
   }
-  
-  _initPlayerType() {
 
-    switch(this._subType) {
+  _initPlayerType() {
+    let t = this;
+    t._cursorImg.src = cursors[t._subType];
+    t._imgLoaded = false;
+
+    switch(t._subType) {
       case 'cPointer':
-        this._cursorImg.src = cursors[0];
-        this._shots       = 1;
-        this._firerate    = 14; 
-        this._projType    = Projectile.getTypes()[0]; 
+        t._shots         = 1;
+        t._firerate      = 14; 
+        t._projType      = Projectile.getTypes()[0]; 
         break;
         
       case 'cRapid':
-        this._cursorImg.src = cursors[1];
-        this._shots         = 1;
-        this._firerate      = 6; 
+        t._shots         = 1;
+        t._firerate      = 9; 
         break;
 
       case 'cDiagonal':
-        this._cursorImg.src = cursors[2];
-        this._shots         = 2;
-        this._firerate      = 10; 
+        t._shots         = 2;
+        t._firerate      = 11; 
         break;
 
       case 'cCross':
-        this._cursorImg.src = cursors[3];
-        this._shots         = 4;
-        this._firerate      = 8; 
+        t._shots         = 4;
+        t._firerate      = 11; 
         break;
 
       case 'cBomb':
-        this._cursorImg.src = cursors[4];
-        this._shots         = 1;
-        this._firerate      = 50; 
-        this._projType      = Projectile.getTypes()[2]; 
+        t._shots         = 1;
+        t._firerate      = 50; 
+        t._projType      = Projectile.getTypes()[2]; 
         break;
 
-      case 'cQuestion':
-        this._cursorImg.src = cursors[5];
-        this._projType      = _ => Projectile.getTypes()[w.ranInt(Projectile.getTypes().length)]; 
-        break;
+      // case 'cQuestion':
+      //   this._projType      = _ => Projectile.getTypes()[w.ranInt(Projectile.getTypes().length)]; 
+      //   break;
 
-      case 'cFinger':
-        this._cursorImg.src = cursors[6];
-        this._shots         = 1;
-        this._firerate      = 50; 
-        this._projType      = Projectile.getTypes()[1];
-        break;
+      // case 'cFinger':
+      //   this._shots         = 1;
+      //   this._firerate      = 50; 
+      //   this._projType      = Projectile.getTypes()[1];
+      //   break;
 
       default:
     }
   }
 
   reset() {
-    this.isDisabled = false; 
-    this.isDead     = false; 
-    this._pos.x     = w.bounds.getCenter().x;
-    this._pos.y     = w.bounds.getCenter().y;
-    this._vel.x     = 0;
-    this._vel.y     = 0;
+    let t = this;
+    t._subType   = t.subTypes[0];
+    t._cursorImg.src = cursors[t._subType];
+    t._initPlayerType(); 
+    t._health    = 3;
+    t.isDisabled = false; 
+    t.isDead     = false; 
+    t._p.x     = w._b.getCenter().x;
+    t._p.y     = w._b.getCenter().y;
+    t._v.x     = 0;
+    t._v.y     = 0;
   }
 
   nextType() {
@@ -107,23 +101,26 @@ export default class extends Entity {
 
   _handleCollisions(cols) {
     cols.map(c => {
-      if(c._type === types['enemy']) {this._die()}
+      if(c._type === types['enemy']) {
+        c.takeDamage(1); 
+        this.takeDamage(1);
+      }
     })
   }
 
   _die() {
-    w.entities.push(new Explosion({pos: this._pos}))
+    w.entities.push(new Explosion({pos: this._p}))
     this.isDead = true;
   }
 
   _shoot() {
     if(w.tick % this._firerate == 0) {
       for(let i=0; i<this._shots; i++) {
-        let a = (this._pos.angle + (w.ran() - 0.5) / 10) + (Math.PI * 2 / this._shots * i); 
+        let a = (this._p.angle + (w.ran() - 0.5) / 10) + (Math.PI * 2 / this._shots * i); 
         this._proj = new Projectile({
           parent: types['player'],
           subType: this._projType,
-          pos: this._pos, 
+          pos: this._p, 
           vel: {x: Math.cos(a), y:  -Math.sin(a)}, 
           constAngle: a 
         })
@@ -133,55 +130,46 @@ export default class extends Entity {
   }
 
   update(ctx) {
-    if(this._buildIn)     {this._build()}
-    this._checkCollisions();
-    this._updatePos();
+    let t = this; 
+    if(t.isDead)       {return;}
+    if(t._health <= 0) {t._die(); return;}
+    if(t._buildIn)     {t._build()}
+    t._cCol();
+    t._updatePos();
 
     if(!player.isDisabled) {
-      if(w.keyMap&w.keys[87]) {this._vel.y += this._speed} // W
-      if(w.keyMap&w.keys[65]) {this._vel.x -= this._speed} // A
-      if(w.keyMap&w.keys[83]) {this._vel.y -= this._speed} // S
-      if(w.keyMap&w.keys[68]) {this._vel.x += this._speed} // D
-      if(w.keyMap&w.keys[32]) {this._shoot()} // Space
+      if(w.keyMap&w.keys[87]) {t._v.y += t._speed} // W
+      if(w.keyMap&w.keys[65]) {t._v.x -= t._speed} // A
+      if(w.keyMap&w.keys[83]) {t._v.y -= t._speed} // S
+      if(w.keyMap&w.keys[68]) {t._v.x += t._speed} // D
+      if(w.keyMap&w.keys[32]) {t._shoot()} // Space
     }
 
-    this._updateVel();
-    this._bounce(); 
-    this._render(ctx); 
+    t._updateVel();
+    t._bounce();
+    t._render(ctx); 
   }
 
   _render(ctx) {
     ctx.save();
-    ctx.translate(this._pos.x, this._pos.y); 
-    ctx.rotate(this._pos.angle + Math.PI / 2);
+    ctx.translate(this._p.x, this._p.y); 
+    ctx.rotate(this._p.angle + Math.PI / 2);
+    let t = this;
+    let r = this._hitrad;
 
     if(this._imgLoaded) {
-      let w = this._cursorImg.width * 1.5 * this._hitrad / this._maxrad;
-      let h = this._cursorImg.height * 1.5 * this._hitrad / this._maxrad;
-      ctx.drawImage(this._cursorImg, -w / 2, -h / 2, w, h);
+      let w = t._cursorImg.width * 1.5 * r / t._maxrad;
+      let h = t._cursorImg.height * 1.5 * r / t._maxrad;
+      ctx.drawImage(t._cursorImg, -w / 2, -h / 2, w, h);
     } else {
       ctx.fillStyle = 'black';
       ctx.beginPath();
-      // ctx.moveTo(0, -this._hitrad);
-      ctx.moveTo(-this._hitrad, 0);
-      ctx.lineTo(0, -this._hitrad);
-      ctx.lineTo(this._hitrad, 0);
-      // ctx.lineTo(this._hitrad, 0);
-      // ctx.closePath();
-      ctx.strokeRect(-this._hitrad / 2, -this._hitrad / 2, this._hitrad, this._hitrad);
+      ctx.moveTo(-r, 0);
+      ctx.lineTo(0, -r);
+      ctx.lineTo(r, 0);
+      ctx.strokeRect(-r / 2, -r / 2, r, r);
       ctx.stroke(); 
     }
-
-    // DEBUG
-    // if(w.DEBUG){this._drawHitbox(ctx)} 
-
     ctx.restore(); 
   }
 }
-
-
-/*
-*
-* Cursors from https://tobiasahlin.com/blog/common-mac-os-x-lion-cursors/
-*
-*/

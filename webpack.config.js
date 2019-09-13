@@ -20,19 +20,8 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
-      },
-      {
-        test: /\.(html)$/,
-        use: {
-          loader: 'html-loader',
-          options: {
-            attrs: [':data-src']
-          }
-        }
+        test: /\.(jpe?g|png|ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+        use: 'base64-inline-loader?limit=1000&name=[name].[ext]'
       }
     ]
   },
@@ -42,7 +31,7 @@ module.exports = {
       minify: isProduction && {
         collapseWhitespace: true
       },
-      inlineSource: isProduction && '\.(js|css)$'
+      inlineSource: isProduction && '\.(js|css|png)$'
     }),
     new HtmlWebpackInlineSourcePlugin(),
     new OptimizeCssAssetsPlugin({}),

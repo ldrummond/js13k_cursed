@@ -2,10 +2,12 @@ import w from "./w";
 
 class Canvas {
   constructor() {
-    this.canvas     = document.getElementById('_canvas'); 
-    this.cursor     = {x: 0, y: 0}
-    this._scale();    
-    this._listen(); 
+    w.queueOnLoad.push(_ => {
+      this.canvas     = document.getElementById('_canvas'); 
+      this.cursor     = {x: 0, y: 0}
+      this._scale();    
+      this._listen(); 
+    });
   }
 
   _scale() {
@@ -22,10 +24,20 @@ class Canvas {
     this.ctx.scale(dpr, dpr);
     this.ctx.imageSmoothingEnabled = false;
     
-    w.bounds = {top: 0, left: 0, width: this._bounds.width, height: this._bounds.height};
-    w.bounds.getCenter = _ => {
-      return {x: w.bounds.width / 2, y: w.bounds.height / 2}
+    w._b = {top: 0, left: 0, width: this._bounds.width, height: this._bounds.height};
+    w._b.getCenter = _ => {
+      return {x: w._b.width / 2, y: w._b.height / 2}
     } 
+    w._b.ranPos = _ => {
+      return {x: 50 + w.ran(w._b.width - 100), y: 50 + w.ran(w._b.height - 100), angle: 0};
+    } 
+    w._b.spawnPoints = [
+      {x: w._b.width / 6,     y: w._b.height / 4},
+      {x: w._b.width / 6,     y: w._b.height / 4 * 3},
+      {x: w._b.width / 6 * 5, y: w._b.height / 4},
+      {x: w._b.width / 6 * 5, y: w._b.height / 4 * 3}
+    ]
+    // w._b.spawnPoints.map(p => this.ctx.fillRect(p.x, p.y, 10, 10));
   }
 
   _resize() {
@@ -33,7 +45,14 @@ class Canvas {
     this.canvas.width     = this._bounds.width * dpr;
     this.canvas.height    = this._bounds.height * dpr;
     // Globally set bounds
-    w.bounds              = {top: 0, left: 0, width: this.canvas.width, height: this.canvas.height}; 
+    w._b = {top: 0, left: 0, width: this._bounds.width, height: this._bounds.height};
+    w._b.getCenter = _ => {
+      return {x: w._b.width / 2, y: w._b.height / 2}
+    } 
+    w._b.ranPos = _ => {
+      return {x: 50 + w.ran(w._b.width - 100), y: 50 + w.ran(w._b.height - 100), angle: 0};
+    } 
+    w._b.spawnPoints = []
   }
   
   _listen() {
@@ -93,7 +112,7 @@ class Canvas {
     // this.ctx.moveTo(this.cursor.x, this.cursor.y - size / 2);
     // this.ctx.lineTo(this.cursor.x, this.cursor.y + size / 2);
     // this.ctx.stroke(); 
-    // this.ctx.strokeRect(w.bounds.left, w.bounds.top, w.bounds.width, w.bounds.height);
+    // this.ctx.strokeRect(w._b.left, w._b.top, w._b.width, w._b.height);
   }
 
   drawFlash() {

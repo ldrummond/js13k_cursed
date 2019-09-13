@@ -4,11 +4,12 @@ import Entity from "./entity";
 export default class extends Entity {
   constructor(opts) {
     super(opts); 
+    let t = this;
 
-    this._maxrad      = opts.maxrad || 30; 
-    this._collides    = false; 
-    this._type        = 'explosion';
-    this._fill        = opts.fill;
+    t._maxrad      = opts.maxrad || 30; 
+    t._collides    = false; 
+    t._type        = 'explosion';
+    t._fill        = opts.fill;
   }
 
   update(ctx) {
@@ -18,9 +19,11 @@ export default class extends Entity {
   }
 
   _draw(ctx) {
+    let r = this._hitrad;
+    ctx.strokeStyle = `rgba(0, 100, 0, ${0.6 - r/ this._maxrad})`
+
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(0, 100, 0, ${0.6 - this._hitrad/ this._maxrad})`
-    ctx.arc(0, 0, this._hitrad, 0, 2 * Math.PI);    
+    ctx.arc(0, 0, r, 0, 2 * Math.PI);    
     ctx.stroke(); 
     if(this._fill) {
       ctx.fillStyle = this.fill;
@@ -30,8 +33,3 @@ export default class extends Entity {
 }
 
 
-/*
-*
-* Cursors from https://tobiasahlin.com/blog/common-mac-os-x-lion-cursors/
-*
-*/

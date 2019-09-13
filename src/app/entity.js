@@ -1,40 +1,41 @@
 import { getAngle } from './functions';
 import w from './w'; 
-import types from './types'; 
 
 export default class {
   constructor(opts = {}) {
-    this._parent      = opts.parent || 'game'; 
-    this._type        = opts.type   || 'entity';
+    let t = this;
+    t._parent      = opts.parent || 'game'; 
+    t._type        = opts.type   || 'entity';
 
-    this._speed       = opts.speed  || 1; 
-    this._health      = opts.health || 1; 
-    this._damage      = opts.damage || 1; 
-    this._pos         = opts.pos ? {...opts.pos} : {x: w.bounds.width / 2,  y: w.bounds.height / 2, angle: 0};
-    this._vel         = opts.vel ? {...opts.vel} : {x: 0,  y: 0};
-    this._constAngle  = opts.constAngle;
-    this._collides    = opts.collides || true; 
+    t._speed       = opts.speed  || 1; 
+    t._health      = opts.health || 1; 
+    t._damage      = opts.damage || 1; 
+    t._p           = opts.pos ? {...opts.pos} : {x: w._b.width / 2,  y: w._b.height / 2, angle: 0};
+    t._v         = opts.vel ? {...opts.vel} : {x: 0,  y: 0};
+    t._constAngle  = opts.constAngle;
+    t._collides    = opts.collides || true; 
     
-    this._buildIn     = opts.buildIn || false; 
-    this._buildSpeed  = opts.buildSpeed || 1; 
+    t._buildIn     = opts.buildIn || false; 
+    t._buildSpeed  = opts.buildSpeed || 1; 
 
-    this._hitrad      = this._buildIn ? 1 : opts.hitrad || 5;
-    this._maxrad      = opts.maxrad || this._hitrad;
+    t._hitrad      = t._buildIn ? 1 : opts.hitrad || 5;
+    t._maxrad      = opts.maxrad || t._hitrad;
 
-    this.isDead       = false; 
+    t.isDead       = false; 
   }
 
   takeDamage(d) {
     this._health -= d; 
+    if(this._health <= 0) {this._die();}
   }
   
   moveTo(pos) {
-    this._pos.x = pos.x;
-    this._pos.y = pos.y;
+    this._p.x = pos.x;
+    this._p.y = pos.y;
   }
 
-  _checkCollisions() {
-    let cols = w.entities.filter(e => w.sqDist(this._pos, e._pos) < w.sq(this._hitrad * 0.6) + w.sq(e._hitrad * 0.6) && e._collides)
+  _cCol() {
+    let cols = w.entities.filter(e => w.sqDist(this._p, e._p) < w.sq(this._hitrad * 0.6) + w.sq(e._hitrad * 0.6) && e._collides)
     this._handleCollisions(cols);
   }
 
@@ -43,14 +44,14 @@ export default class {
   }
 
   collides(p, prad) {
-    return w.sqDist(this._pos, p) < w.sq(this._hitrad * 0.6) + w.sq(prad * 0.6)
+    return w.sqDist(this._p, p) < w.sq(this._hitrad * 0.6) + w.sq(prad * 0.6)
   }
 
   _checkBounds() {
-    if(this._pos.x - this._hitrad < 2)                {return 1}           
-    if(this._pos.x + this._hitrad > w.bounds.width)   {return 1} 
-    if(this._pos.y - this._hitrad < 2)                {return 2}             
-    if(this._pos.y + this._hitrad > w.bounds.height)  {return 2}
+    if(this._p.x - this._hitrad < 2)                {return 1}           
+    if(this._p.x + this._hitrad > w._b.width)   {return 2} 
+    if(this._p.y - this._hitrad < 2)                {return 3}             
+    if(this._p.y + this._hitrad > w._b.height)  {return 4}
   }
 
   _die() {
@@ -65,26 +66,28 @@ export default class {
 
   _bounce() {
     switch(this._checkBounds()) {
-      case 1: this._vel.x *= -1; break;
-      case 2: this._vel.y *= -1; break;
+      case 1: this._v.x = Math.abs(this._v.x); return true;
+      case 2: this._v.x = -Math.abs(this._v.x); return true;
+      case 3: this._v.y = -Math.abs(this._v.y); return true;
+      case 4: this._v.y = Math.abs(this._v.y); return true;
     }
   }
 
   _updatePos() {
-    this._pos.x     += this._vel.x * this._speed;
-    this._pos.y     -= this._vel.y * this._speed;
-    this._pos.angle = this._constAngle || getAngle(this._pos, this._target); 
+    this._p.x     += this._v.x * this._speed;
+    this._p.y     -= this._v.y * this._speed;
+    this._p.angle = this._constAngle || getAngle(this._p, this._target); 
   }
 
   _updateVel() {
-    this._vel.x *= this._vel.x > 0.1 || this._vel.x < 0.1 ? 0.95 : 0; 
-    this._vel.y *= this._vel.y > 0.1 || this._vel.y < 0.1 ? 0.95 : 0; 
+    this._v.x *= this._v.x > 0.1 || this._v.x < 0.1 ? 0.95 : 0; 
+    this._v.y *= this._v.y > 0.1 || this._v.y < 0.1 ? 0.95 : 0; 
   }
  
   update(ctx) {
     if(this._buildIn)     {this._build()}
     if(this.health <= 0)  {this._die()}
-    if(this.collides)     {this._checkCollisions()}; 
+    if(this.collides)     {this._cCol()}; 
 
     this._updatePos();
     this._updateVel(); 
@@ -93,23 +96,15 @@ export default class {
   }
 
   _draw(ctx) {
-    ctx.fillRect(this._pos.x, this._pos.y, 20 * this._hitrad / this._maxrad, 20 * this._hitrad / this._maxrad);
+    ctx.fillRect(this._p.x, this._p.y, 20 * this._hitrad / this._maxrad, 20 * this._hitrad / this._maxrad);
   }
 
-  _drawHitbox(ctx) {
-    ctx.beginPath();
-    ctx.arc(0, 0, this._hitrad * 0.6, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.closePath();
-  }
-  
   _render(ctx) {
     ctx.save();
-    ctx.translate(this._pos.x, this._pos.y); 
-    ctx.rotate(this._pos.angle);
+    ctx.translate(this._p.x, this._p.y); 
+    ctx.rotate(this._p.angle);
     
     this._draw(ctx); 
-    // if(w.DEBUG){this._drawHitbox(ctx)}  
 
     ctx.restore(); 
   }

@@ -1,25 +1,32 @@
 import w from "./w";
+import { getAngle } from './functions';
 import types from './types';
 import Explosion from "./explosion";
 import Entity from "./entity";
 
 export default class extends Entity {
   constructor(opts) {
-    // opts._vel = opts._vel || {x: 1, y: 1}
     super(opts)
-    this._speed     = 4;
-    this._hitrad    = 8;
-    this._collides  = true;
-    this._type      = types['projectile'];
-    this._damage    = 1; 
+    let t = this;
 
-    this._subTypes = [
+    t._speed     = opts.speed || 4;
+    t._hitrad    = 8;
+    t._collides  = true;
+    t._type      = types['projectile'];
+    t._damage    = 1;
+    t._initiator = opts.initiator;
+    t._fillColor = opts.fillColor; 
+    t._strokeColor;  
+
+    t._subTypes = [
       'bullet',
       'ripple',
       'bomb',
+      'seeker',
+      'orbiter',
     ]
-    this._subType = opts.subType || 'bullet';
-    this._initProjectileType()
+    t._subType = opts.subType || 'bullet';
+    t._initProjectileType()
   }
 
   static getTypes() {
@@ -27,7 +34,8 @@ export default class extends Entity {
       'bullet',
       'ripple',
       'bomb',
-      'mine', 
+      'seeker',
+      'orbiter',
     ];
   }
 
@@ -35,45 +43,94 @@ export default class extends Entity {
     switch(typeof(this._subType) === 'function' ? this._subType() : this._subType) {
       case 'bullet':
         this._draw = (ctx) => {
+          let r = this._hitrad;
           ctx.fillStyle = 'rgba(2, 100, 2, 0.1)';
-          ctx.fillRect(-this._hitrad, -this._hitrad/2, -this._hitrad / 2, this._hitrad / 2);
+          ctx.fillRect(-r, -r/2, -r / 2, r / 2);
           ctx.fillStyle = 'rgba(2, 100, 2, 0.1)';
-          ctx.fillRect(-this._hitrad / 2, -this._hitrad/2, -this._hitrad / 2, this._hitrad / 2);
-          ctx.fillStyle = 'rgba(0, 20, 100, 0.8)';
-          ctx.fillRect(0, -this._hitrad/2, -this._hitrad / 2, this._hitrad / 2);
+          ctx.fillRect(-r / 2, -r/2, -r / 2, r / 2);
+          ctx.fillStyle = this._fillColor || 'rgba(0, 20, 100, 0.8)';
+          ctx.fillRect(0, -r/2, -r / 2, r / 2);
         }
         break;
 
-      case 'ripple':
-        this._vel     = {x: 0, y: 0}
-        this._hitrad  = 5; 
-        this._maxrad  = 100;
-        this._draw = (ctx) => {
-          this._hitrad < this._maxrad ? this._hitrad+= 2 : this._die();  
-          ctx.beginPath();
-          // ctx.strokeStyle = `rgba(0, 100, 0, ${0.6 - this._hitrad/ this._maxrad})`
-          ctx.arc(0, 0, this._hitrad * 0.6, 0, 2 * Math.PI);
-          ctx.stroke();
-          ctx.closePath();
-        }
-        break;
+      // case 'ripple':
+      //   this._v     = {x: 0, y: 0}
+      //   this._hitrad  = 5; 
+      //   this._maxrad  = 100;
+      //   this._draw = (ctx) => {
+      //     let r = this._hitrad;
+      //     r < this._maxrad ? r += 2 : this._die();  
+      //     ctx.beginPath();
+      //     // ctx.strokeStyle = `rgba(0, 100, 0, ${0.6 - r/ this._maxrad})`
+      //     ctx.arc(0, 0, r * 0.6, 0, 2 * Math.PI);
+      //     ctx.stroke();
+      //     ctx.closePath();
+      //   }
+      //   break;
 
       case 'bomb':
-        this._vel     = {x: 0, y: 0}
-        this._hitrad  = 20; 
+        this._v     = {x: 0, y: 0}
+        let r = 20; 
         this._draw = (ctx) => {
+          ctx.save();
+
+          let f1,f2; 
+          if(this._parent === types['enemy']) {
+            f1 = '#d31d1d';
+            f2 = '#870000';
+          } else {
+            f1 = '#4dc5f9';
+            f2 = '#3582e4';
+          }
           ctx.beginPath();
-          ctx.fillStyle = '#4DC5F9'
-          ctx.arc(0, 0, this._hitrad * 0.6, 0, 2 * Math.PI);
+          ctx.fillStyle = f1;
+          ctx.arc(0, 0, r * 0.6, 0, Math.PI * 2);
           ctx.fill();
-          ctx.closePath();
+
+          let cQuart = (ctx, col) => {
+            ctx.rotate(Math.PI / 2);
+            ctx.beginPath();
+            ctx.fillStyle = col;
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, r * 0.6, 0, Math.PI / 2);
+            ctx.moveTo(0, 0);
+            ctx.fill();
+          }
+
+          cQuart(ctx, f2);
+          cQuart(ctx, f1);
+          cQuart(ctx, f2);
+
+          ctx.restore();
         }
         break; 
+
+      case 'seeker':
+        this._health  = 5;
+        this._hitrad  = 30;
+        this._draw = (ctx) => {
+          let r = this._hitrad;
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+        break; 
+
+      case 'orbiter':  
+        this._hitrad  = 30;
+        this._speed   = 0.6;
+        this._p = {x: this._initiator._p.x + 100, y: this._initiator._p.y} 
+        // this._v = {x: -10, y: 0} 
+        this._draw = (ctx) => {
+          w.circ(0, 0, this._hitrad * 0.6, ctx);
+        }
+        break;     
     }
   }
 
   _die() {
-    let e = new Explosion({pos: this._pos});
+    let e = new Explosion({pos: this._p});
     w.entities.push(e);
     this.isDead = true;
   }
@@ -82,6 +139,11 @@ export default class extends Entity {
     cols.map(c => {
       switch(c._type) {
         case this._type:
+          if(c._parent != this._parent) {
+            c.takeDamage(this._damage); 
+            this.takeDamage(1);
+          }
+          break; 
         case this._parent:
           break;
         
@@ -93,13 +155,38 @@ export default class extends Entity {
   }
 
   update(ctx) {
-    this._checkCollisions();
-    if(this._checkBounds()) {this._die()};
+    this._cCol();
+    
+    switch(this._subType) {
+      case 'seeker':
+        if(w.oneIn(5)) {
+          this._p.angle = getAngle(this._p, w.player._p);          
+        }
+        this._v.x += Math.cos(this._p.angle) / 10; 
+        this._v.y += -Math.sin(this._p.angle) / 10;
+        this._p.x += this._v.x * this._speed;
+        this._p.y -= this._v.y * this._speed;
+        this._updateVel();
+        break; 
+        
+      case 'orbiter':    
+        this._p.angle = getAngle(this._p, this._initiator._p);  
+        this._v.x += Math.cos(this._p.angle) / 10; 
+        this._v.y += -Math.sin(this._p.angle) / 10;
+        this._p.x += this._v.x * this._speed;
+        this._p.y -= this._v.y * this._speed;
+        break;        
+        
+      default: 
+        if(this._checkBounds()) {this._die()};
+        this._p.x     += this._v.x * this._speed;
+        this._p.y     -= this._v.y * this._speed;
+        this._p.angle = this._constAngle;
+        break;
+    }
 
-    this._pos.x     += this._vel.x * this._speed;
-    this._pos.y     -= this._vel.y * this._speed;
-    this._pos.angle = this._constAngle;
-
+    
+    ctx.fillStyle = 'white';
     this._render(ctx); 
   }
 

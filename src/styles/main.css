@@ -203,6 +203,21 @@ h1,h2,h3,h4,h5 {
   z-index: 100;
 }
 
+.no-upgrades label {
+  display: none;
+}
+
+.no-upgrades #upgrade-text {
+  display: none;
+}
+
+#health {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: rgb(112, 112, 112);
+}
+
 #url {
   pointer-events: none;
   color: #111;

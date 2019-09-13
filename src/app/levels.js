@@ -1,44 +1,101 @@
 export default [
   {
+    hasUpgrades: false, 
     enemies: {
-      'floater' : 1,
+      'floater' : 5,
       'sniper'  : 0,
-      'chaser'  : 0, 
+      'seeker'  : 0, 
+      'launcher': 0,
+      'bomber'  : 0,
+      'boss'    : 0,
     },
   },
   {
+    hasUpgrades: false, 
     enemies: {
-      'floater' : 2,
-      'sniper'  : 0,
-      'chaser'  : 0, 
+      'floater' : 0,
+      'sniper'  : 3,
+      'seeker'  : 0, 
+      'launcher': 0,
+      'bomber'  : 0,
+      'boss'    : 0,
     },
   },
-  // {
-  //   enemies: {
-  //     'floater' : 3,
-  //     'sniper'  : 0,
-  //     'chaser'  : 0, 
-  //   },
-  // },
-  // {
-  //   enemies: {
-  //     'floater' : 4,
-  //     'sniper'  : 0,
-  //     'chaser'  : 0, 
-  //   },
-  // },
-  // {
-  //   enemies: {
-  //     'floater' : 5,
-  //     'sniper'  : 0,
-  //     'chaser'  : 0, 
-  //   },
-  // },
-  // {
-  //   enemies: {
-  //     'floater' : 6,
-  //     'sniper'  : 0,
-  //     'chaser'  : 0, 
-  //   },
-  // },
+  {
+    hasUpgrades: false, 
+    enemies: {
+      'floater' : 3,
+      'sniper'  : 0,
+      'seeker'  : 12, 
+      'launcher': 0,
+      'bomber'  : 0,
+    },
+  },
+  {
+    hasUpgrades: false, 
+    enemies: {
+      'floater' : 5,
+      'sniper'  : 3,
+      'seeker'  : 1, 
+      'launcher': 0,
+      'bomber'  : 0,
+    },
+  },
+  {
+    hasUpgrades: true, 
+    up1: 'cRapid',
+    up2: 'cDiagonal',
+    enemies: {
+      'floater' : 4,
+      'sniper'  : 2,
+      'seeker'  : 2, 
+      'launcher': 1,
+      'bomber'  : 1,
+    },
+  },
+  {
+    hasUpgrades: false, 
+    enemies: {
+      'floater' : 5,
+      'sniper'  : 0,
+      'seeker'  : 0, 
+      'launcher': 3,
+      'bomber'  : 1,
+    },
+  },
+  {
+    hasUpgrades: true, 
+    up1: 'cCross',
+    up2: 'cBomb',
+    enemies: {
+      'floater' : 5,
+      'sniper'  : 0,
+      'seeker'  : 10, 
+      'launcher': 0,
+      'bomber'  : 3,
+    },
+  },
+  {
+    hasUpgrades: false,     
+    enemies: {
+      'floater' : 5,
+      'sniper'  : 0,
+      'seeker'  : 5, 
+      'launcher': 2,
+      'bomber'  : 2,
+    },
+  },
+  {
+    hasUpgrades: false, 
+    // up1: 'cQuestion',
+    // up2: 'cFinger',
+    enemies: {
+      'floater' : 12,
+      'sniper'  : 3,
+      'seeker'  : 5, 
+      'launcher': 0,
+      'bomber'  : 1,
+      'boss'    : 1,
+    },
+  },
 ]
