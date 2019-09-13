@@ -14,8 +14,8 @@ cast forward through browser windows. Find your shapes as you travel back to you
 - Cursor - aim 
 
 ## Author
-Lucas Drummond 
-https://github.com/ldrummond
+* Lucas Drummond 
+* https://github.com/ldrummond
 
 
 ## Webpack Config
